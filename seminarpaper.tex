@@ -1,0 +1,245 @@
+% This template is provided for all the participants of the seminar ``Information Extraction'' at Saarland University, winter term 2016 / 2017
+%%%%%%%%%%%%%%%%%%%%%
+% Author information:
+%%%%%%%%%%%%%%%%%%%%%
+% Jannik Strötgen
+% Max Planck Institute for Informatics
+% Saarland Informatics Campus
+% Campus E1, 4
+% 66123 Saarbrücken, Germany
+% jannik.stroetgen@mpi-inf,mpg.de
+%%%%%%%
+% Date: November 4, 2016
+%%%%%%% 
+
+\documentclass[
+     11pt,         % font size
+     a4paper,      % paper format
+     oneside,
+     ]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% PACKAGES:
+
+% Use English:
+\usepackage[USenglish]{babel}
+% Input encoding
+\usepackage[utf8]{inputenc}
+% Font encoding
+\usepackage[T1]{fontenc}
+% Einbinden von URLs:
+\usepackage{url}
+% hyperrefs in the documents
+\usepackage[bookmarks=true,colorlinks,pdfpagelabels,pdfstartview = FitH,bookmarksopen = true,bookmarksnumbered = true,linkcolor = black,plainpages = false,hypertexnames = false,citecolor = black,urlcolor=black]{hyperref} 
+%\usepackage{hyperref}
+% Include Graphic-files:
+\usepackage{graphicx}
+% Include PDF links
+%\usepackage[pdftex, bookmarks=true]{hyperref}
+% Fuer Textsatz
+\usepackage{setspace}
+% For bibliography style
+\usepackage[numbers]{natbib}
+% for Latex symbols
+\usepackage{doc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel, Autor, Seminar, Semester, Lecturer %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\mytitle}{Toponym Resolution and Adaptive Context Features}
+\newcommand{\myauthor}{Faraz Ahmad}
+\newcommand{\myseminar}{Information Extraction}
+\newcommand{\mysemester}{Winter term 2016/2017}
+\newcommand{\mysemesterLC}{winter term 2016/2017}
+\newcommand{\mydozent}{Dr.~Jannik Strötgen}
+\newcommand{\myMatrikelnummer}{2562742}
+\newcommand{\myStudiengang}{Computer Science (MS)}
+\newcommand{\mySemester}{2}
+\newcommand{\myEmail}{s8faahma@stud.uni-saarland.de}
+
+% OTHER SETTINGS:
+\setlength{\parindent}{0in}
+
+% Pagestyle:
+\pagestyle{myheadings}
+\markright{\myauthor: \mytitle}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% <TITLE> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{roman}
+\begin{titlepage}
+\begin{tabular}[l]{l}
+% about the seminar
+Saarland University\\
+Department of Computer Science\\
+\mysemester\\
+Seminar \myseminar\\
+Lecturer: \mydozent\\
+\end{tabular}
+
+\vspace{4cm}
+\begin{center}
+\textbf{\large Seminar Paper} 
+\vspace{0.5\baselineskip}
+
+% title is ``printed'' -- as defined above
+{\huge
+\mytitle
+}
+\end{center}
+
+\vfill 
+% Personal information
+\begin{tabular}[l]{ll}
+Name:                 & \myauthor\\
+Matriculation number: & \myMatrikelnummer\\
+Field of study:       & \myStudiengang, (semester \mySemester )\\
+Email:                & \myEmail\\
+Date:                 & \today \\
+\end{tabular}
+
+\end{titlepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% </TITLE> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% spacing
+\onehalfspacing
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% <decalaration> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\thispagestyle{empty}\label{declaration}
+\vspace*{100pt}
+I hereby confirm that I have written the seminar paper with the title \textbf{\mytitle}
+in the seminar \textbf{\myseminar} (lecturer: \textbf{\mydozent}) on my own and that I 
+have not used any other media or materials than the ones referred to in this seminar paper. 
+
+I further confirm that I did not submit this or a very similar seminar paper in another seminar.
+\vspace*{50pt}
+
+Saarbrücken, \today \hspace{2cm} \underline{\phantom{Some space for your signature}}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% </Antiplagiatserklärung> %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% <tableofcontents> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of contents
+\tableofcontents
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% </tableofcontents> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% <Main part of the seminar paper> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{arabic} % start counting with ``1''
+\section{Introduction}\label{sec:introduction}
+Today the Web has billions of webpages which are mostly in textual form be it blogs, plain text, articles, news, reviews, tweets, data tables, or any other format. Naturally it makes a lot of sense to be able to find relevant information from this huge amount of data on the web. There has been lot of research in the field of Information Retrieval in past two decades. Importance of Information Retrieval i.e. finding text documents that satisfy an information need from large collections of documents \cite{Manning:2008:IIR:1394399}, is evident from the emergence of large commercial search engines such as Google, Bing, Baidu, etc.
+
+The information need of users is often related to some geographic constraints, for example ---. In a study of a query log of Excite search engine, it was found out that 18.6\% of the search queries contained a geographical term \cite{Sanderson04analyzinggeographic}. The search results of an Information Retrieval system can be improved for geographical queries if special attention is paid to the geographic terms which usually refer to location names(toponyms). If the geographic term in the query and documents is dealt with like all other query terms, then it is a possibility that the search results will not bring up potential relevant documents which do not mention that geographic term. For example consider that the query term is "Völklingen, Saarbrücken, Saarlouis", then probably a document which mentions "Saarland" in it, and not all of the query terms is relevant for this query, but it would probably not rank higher if we only match the query terms in the corpus. However if we find the geographic focus of the documents and the query we can benefit and retrieve even the documents which do not explicitly mention the query terms in them but are geographically relevant. Similarly if a query contains a geographic query terms which is ambiguous, for example Hyderabad is a city in Pakistan and also in India, the search results will not be optimal. A geographic query term can also a name of a non-geographic entity such as a person, for example Jordan is a country as well as a person name. These ambiguities, if not dealt with can lead to unsatisfactory search results. The ambiguities can be dealt with if these geographic terms are recognized, disambiguated and grounded to the geographic coordinates of that specific location. 
+
+Another important domain besides Information Retrieval which can benefit from recognizing and resolving toponyms is of Question Answering, as mentioned by Leidner\cite{Leidner:2008:PhD}, . For example consider the search query "What is the distance between Brussels and Munich". If traditional methods are applied then it will be near impossible to solve it, but if we recognize the location names(toponyms), ground them and calculate distance between the coordinates, such questions can be answered directly. These days many commercial search engines successfully return direct answers for such queries. 
+
+The geographical terms which refer to location names in some text are called Toponyms. To understand the geographic context of a query or a text document, we need to do geotagging. Geotagging is a two step process i.e. first finding out the words in text which correspond to location names, second assigning correct lat/long values to these location names(called toponyms) \cite{Lieberman12adaptivecontext}. Geographic content on the Web is perhaps most prevalent in the news domain, as the news almost always mention some geographic locations in them. These news today are being generated daily all over different geographical regions in the world. Many of the news sources(news sites, tweets, blogs) are international and some are localized.For efficient location-based retrieval, these news articles should be indexed taking into account the geographic context in them.
+
+As mentioned earlier, geotagging is a two phase process: i.e. recognition and then resolution. In recognition we recognize/identify the toponyms. In resolution we normalize/ground them to lat/long values. Both the steps can be considered as classification problems of machine learning. In recognition, we classify the word as toponym or not. In resolution, we classify toponym interpretaion as correct or not. This way techniques from supervised machine learning can be leveraged effectively. These techniques will perform better if our input features are designed better. One can use population of each interpretaion as a feature. Lieberman and Samet in \cite{Lieberman12adaptivecontext}, suggest a new class of features, termed as adaptive context features. These features are found out by considering a window around a toponym of some variable size width. Then all toponyms are considered in this window and their interpretations are also considered to find the correct interpretation of the word around which windows was considered. The number interpretations to consider can also be varied by a variable sized depth. Tuning these parameters of width and depth allow to balance recall and precision as desired. Two important features considered are proximity and sibling features. 
+
+The remainder of the seminar paper is organized as follows. In Section~\ref{sec:background_concepts}, background concepts such as toponyms, geotagging, geoparsing, etc are explained with examples.
+Then, in Section~\ref{sec:sections}, the motivation for toponym resolution is explained under various scenarios. Then, in Section~\ref{sec:acf}, the paper by Lieberman and Samet \cite{Lieberman12adaptivecontext} on Adaptive Context Features is discussed in detail. Finally, the discussion is concluded in Section~\ref{sec:conclusion}.
+
+\section{Background Concepts}\label{sec:background_concepts}
+Here I will discuss the background of the problem, why is toponym resolution useful and in what domanins.
+\subsection{Toponyms}
+\subsection{Geotagging}
+\subsection{Geoparsing}
+\subsection{Geocoding}
+\subsection{Geographic Information Systems}
+
+\section{Motivation}\label{sec:sections}
+\subsection{Web Pages} web a where
+\subsection{Enclyclopedia Articles} geospatial anchoring of wikipedia articles
+\subsection{Spread Sheets} you are where you edit ...
+\subsection{Hidden Web} steward
+\subsection{News Articles} 
+
+disambiguation toponyms in news
+
+geotagging using proximity sibling and prominence cues to understand comma groups
+
+\subsection{Question Answering} in leidner thesis
+
+\section{Adaptive Context Features}\label{sec:acf}
+
+
+\subsection{Toponym Recognition}\label{subsec:titlepage}
+\begin{itemize}
+	\item Rule based
+	\item SNLP tools based
+\end{itemize}
+\subsection{Toponym Resolution}
+\begin{itemize}
+	\item Casting geotagging as binary classification problem
+	\item Random forests used for classification
+	\item Precision and Recall balance
+	\item Alternate method of SVM and its drawbacks
+\end{itemize}
+\subsection{Context Free Features (Resolution Features)}
+\begin{itemize}
+	\item I
+	\item P
+	\item A
+	\item D
+	\item L
+\end{itemize}
+
+\begin{itemize}
+	\item Proximity and Sibling features subsume context sensitive features
+	\item position of toponym in window irrelevant
+\end{itemize}
+\subsection{Proximity Features}
+\begin{itemize}
+	\item CONTINUOUS
+	\item computation of proximity feature score
+\end{itemize}
+\subsection{Sibling Features}
+\begin{itemize}
+	\item DISCRETE
+	\item computation of sibling feature score
+	\item advantages
+\end{itemize}
+\subsection{Feature Computation}
+\begin{itemize}
+	\item window breadth and window depth
+	\item The order of interpretations in window depth is very important
+	\item computation of proximity feature score
+\end{itemize}
+
+\subsection{Experiments}
+\subsection{Competing methods}
+\begin{itemize}
+	\item Thomson Reuter's OpenCalais
+	\item Yahoo!'s Placemaker
+\end{itemize}
+\subsection{Gazeteer used}
+\subsection{Datasets used}
+\subsection{Experiments results}
+explain the evaluation metrics used for recognition here
+\subsubsection{Recognition accuracy}
+\subsubsection{Resolution accuracy}
+\subsubsection{Effect of adaptive parameters}
+\section{Conclusion}\label{sec:conclusion}
+
+\section{Summary}
+
+% References (bibliography):
+% a) add ``Bibliography'' to table of content
+\newpage
+\addcontentsline{toc}{section}{Bibliography}
+% b) Style (with abbreviations: use alpha):
+\bibliographystyle{plainnat}
+% c) The File:
+\bibliography{seminarpaper}
+
+\end{document}
