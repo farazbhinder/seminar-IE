@@ -44,6 +44,34 @@
 % for Latex symbols
 \usepackage{doc}
 
+
+% for list items indentation changing options
+\usepackage{enumitem}
+
+
+% source: http://tex.stackexchange.com/a/51176
+\usepackage{amsmath}
+\makeatletter
+\newcommand\xleftrightarrow[2][]{\ext@arrow 0099{\longleftrightarrowfill@}{#1}{#2}}
+\def\longleftrightarrowfill@{\arrowfill@\leftarrow\relbar\rightarrow}
+\makeatother
+
+% for tick marks
+\usepackage{dingbat}
+
+% for referencing
+\usepackage{cleveref}
+
+% source http://tex.stackexchange.com/a/163779
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Titel, Autor, Seminar, Semester, Lecturer %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,13 +166,12 @@ Saarbrücken, \today \hspace{2cm} \underline{\phantom{Some space for your signat
 \section{Introduction}\label{sec:introduction}
 Today the Web has billions of webpages which are mostly in textual form be it blogs, plain text, articles, news, reviews, tweets, data tables, or any other format. Naturally it makes a lot of sense to be able to find relevant information from this huge amount of data on the web. There has been lot of research in the field of Information Retrieval in past two decades. The importance of Information Retrieval i.e. finding text documents that satisfy an information need from large collections of documents \cite{Manning:2008:IIR:1394399}, is evident from the emergence of large commercial search engines such as Google, Bing, Baidu, etc.
 
-The information need of users is often related to some geographic constraints, for example ---. In a study of a query log of Excite search engine, it was found out that 18.6\% of the search queries contained a geographical term \cite{Sanderson04analyzinggeographic} (cf.\cite{Leidner:2008:PhD}). The search results of an Information Retrieval system can be improved for geographical queries if special attention is paid to the geographic terms which usually refer to location names(toponyms). If the geographic term in the query and documents is dealt with like all other query terms, then it is a possibility that the search results will not bring up potential relevant documents which do not mention that geographic term. For example consider that the query term is "Völklingen, Saarbrücken, Saarlouis", then probably a document which mentions "Saarland" in it, and not all of the query terms is relevant for this query, but it would probably not rank higher if only query terms are matched in the corpus. The same example can be considered in reverse order i.e. if query term is "Saarland", the retrieval system should return documents do not mention "Saarland" explicitly in them, but talk about the cities of Saarland. If the geographic focus of the documents and the query is found, even the documents which do not explicitly mention the query terms in them but are geographically relevant can be retrieved. Similarly if a query contains a geographic query terms which is ambiguous, for example Hyderabad is a city in Pakistan and also in India, the search results will not be optimal. A geographic query term can also a name of a non-geographic entity such as a person, for example Jordan is a country as well as a person name. These ambiguities, if not dealt with can lead to unsatisfactory search results. The ambiguities can be dealt with if these geographic terms are recognized, disambiguated and grounded to the geographic coordinates of that specific location. 
+The information need of users is often related to some geographic constraints, for example in a study of a query log of Excite search engine, it was found out that 18.6\% of the search queries contained a geographical term \cite{Sanderson04analyzinggeographic} (cf.\cite{Leidner:2008:PhD}). The search results of an Information Retrieval system can be improved for geographical queries if special attention is paid to the geographic terms which usually refer to location names(toponyms). In a query or a document there can be a location name which is ambiguous; it might refer to different cities having same names, or it might refer to a person or organization name. These ambiguities, if not dealt with can lead to unsatisfactory search results. The ambiguities can be dealt with if these geographic terms are recognized, disambiguated and grounded to the geographic coordinates of that specific location. There are many other domains where it is beneficial to deal with geographic terms in a special way; for it one need to identify the geographic terms and disambiguate them. 
 
-Another important domain besides Information Retrieval which can benefit from recognizing and resolving toponyms is of Question Answering, as mentioned by Leidner \cite{Leidner:2008:PhD}. For example consider the search query "What is the distance between Brussels and Munich". If traditional methods are applied then it will be near impossible to solve it, but if the location names(toponyms) are recognized, grounded to coordinates of correct interpretation of Brussels and Munich, distance between the coordinates is calcuated, such questions can be answered directly. These days many commercial search engines successfully return direct answers for such queries. 
 
-The geographical terms which refer to location names in some text are called Toponyms. To understand the geographic content of a query or a text document, we need to do geotagging. Geotagging is a two step process i.e. first finding out the words in text which correspond to location names, second assigning correct lat/long values to these location names(called toponyms) \cite{Lieberman12adaptivecontext}. Geographic content on the Web is perhaps most prevalent in the news domain, as the news almost always mention some geographic locations in them. These news today are being generated daily all over different geographical regions in the world. Many of the news sources(news sites, tweets, blogs) are international and some are localized. For efficient location-based retrieval, these news articles should be indexed taking into account the geographic content in them.
+The geographical terms in a text which refer to location names are called toponyms. To understand the geographic content of a query or a text document, one need to do geotagging. Geotagging is a two step process i.e. first finding out the toponyms, second assigning correct lat/long values to these toponyms(location names) \cite{Lieberman12adaptivecontext}. Geographic content on the web is perhaps most prevalent in the news domain, as the news almost always mention some geographic locations in them. These news today are being generated daily all over different geographical regions in the world. Many of the news sources(news sites, tweets, blogs) are international and some are localized. For efficient location-based retrieval, these news articles should be indexed taking into account the geographic content in them.
 
-As mentioned earlier, geotagging is a two phase process: i.e. recognition and then resolution. In recognition we recognize/identify the toponyms. In resolution we normalize/ground them to lat/long values. Both the steps can be considered as classification problems of machine learning. In recognition, we classify the word as toponym or not. In resolution, we classify toponym interpretaion as correct or not. This way techniques from supervised machine learning can be leveraged effectively. These techniques will perform better if our input features are designed better. For example the population of each interpretaion of a toponym can be used as an input feature. Lieberman and Samet in \cite{Lieberman12adaptivecontext}, suggest a new class of features, termed as adaptive context features. These features are found out by considering a window around a toponym of some variable size width. Then all toponyms are considered in this window and their interpretations are also considered to find the correct interpretation of the word around which windows was considered. The number interpretations to consider can also be varied by a variable sized depth. Tuning these parameters of width and depth allow to balance recall and precision as desired. Two important features considered are proximity and sibling features. 
+As mentioned earlier, geotagging is a two phase process: i.e. recognition and resolution. In recognition the toponyms are recognized/identified. In resolution the recognized toponyms are normalized/grounded to lat/long values. Both the steps can be considered as classification problems of machine learning \cite{Lieberman12adaptivecontext}. In recognition, system classify the word as toponym or not. In resolution, system classify toponym interpretation as correct or not. This way techniques from supervised machine learning can be leveraged effectively. These techniques will perform better if our input features are designed better. For example the population of each interpretation of a toponym can be used as an input feature. Lieberman and Samet in \cite{Lieberman12adaptivecontext}, suggest a new class of features, termed as adaptive context features. These features are found out by considering a window around a toponym of some variable size breadth. Then all toponyms are considered in this window and their interpretations are also considered to find the correct interpretation of the word around which windows was considered. The number interpretations to consider can also be varied by a variable sized depth. Tuning these parameters of breadth and depth allow to balance recall and precision as desired. Two adaptive features are suggested i.e. proximity and sibling features. 
 
 The remainder of the seminar paper is organized as follows. In Section~\ref{sec:background_concepts}, background concepts such as toponyms, geotagging, geoparsing, etc are explained with examples.
 Then, in Section~\ref{sec:sections}, the motivation for toponym resolution is explained under various scenarios. Then, in Section~\ref{sec:acf}, the paper by Lieberman and Samet \cite{Lieberman12adaptivecontext} on Adaptive Context Features is discussed in detail. Finally, the discussion is concluded in Section~\ref{sec:conclusion}.
@@ -153,12 +180,12 @@ Then, in Section~\ref{sec:sections}, the motivation for toponym resolution is ex
 In this section some background concepts are discussed.
 
 \subsection{Information Retrieval}
-Information Retrieval as defined by Manning et al. is "Information retrieval (IR) is finding material (usually documents) of an unstructured nature (usually text) that satisfies an information need from within large collections (usually stored on computers)" \cite{Manning:2008:IIR:1394399}. Information Retrieval systems usually make an index which stores for each term in the corpus, its relevant documents. At retrieval time, the query is processed by the engine and relevant documents are retrieved in a ranked order. The usual techniques in Information Retrieval such as boolean retrieval, tf-idf model, vector space model, language models approach; all have one thing in common i.e. they consider the query terms uniformly.  By uniformly, it means for example a query --- ""
+Information Retrieval as defined by Manning et al. is "Information retrieval (IR) is finding material (usually documents) of an unstructured nature (usually text) that satisfies an information need from within large collections (usually stored on computers)" \cite{Manning:2008:IIR:1394399}. Information Retrieval systems usually make an index which stores for each term in the corpus, its relevant documents. At retrieval time, the query is processed by the engine and relevant documents are retrieved in a ranked order. The usual techniques in Information Retrieval such as boolean retrieval, tf-idf model, vector space model, language models approach; all have one thing in common i.e. they consider the query terms uniformly.
 
 \subsection{Information Extraction}
 Information Extraction is concerned with extracting structured information from unstructured documents. As defined by Hobbs and Riloff, "It(IE) requires deeper analysis than  key word searches, but its aims fall short of the very hard and long-term problem of text understanding, where we seek to capture all the information in a text, along with the speaker's or writer's intention" \cite{hobbs-handbook10}.
 
-One of the most common task in Information Extraction is NER (Named Entity Recognition). NER is concerned with identifying the names of persons, companies, locations in text. Sometimes detecting dates is also considered in NER. Another very important task in IE is that of Relationship Extraction. For example consider the sentence "Saarland university was founded in 1948". Relationship extraction should here be able to detect the entity "Saarland university", the year "1948" and the relation "founded". Many knowledgebases today for example YAGO\footnote{\url{http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/}}, are automatically created by employing such relationship extraction rules. Usually these knowledgebases extract entitites, facts and relations between entities from online encyclopedias such as Wikipedia. For the given example, in such knowledgebases, there will be an entity for Saarland University, and a property of founded will be associated with this entity which will have a value of 1948. These knowledgebases once created can be queried and will return direct answers for precise questions.
+One of the most common task in Information Extraction is NER (Named Entity Recognition). NER is concerned with identifying the names of persons, companies, locations in text. Sometimes detecting dates is also considered in NER. Another very important task in IE is that of Relationship Extraction. For example consider the sentence "Saarland university was founded in 1948". Relationship extraction should here be able to detect the entity "Saarland university", the year "1948" and the relation "founded". Many knowledgebases today for example YAGO\footnote{\url{http://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/}}, are automatically created by employing such relationship extraction rules. Usually these knowledgebases extract entitites, facts and relations between entities from online encyclopedias such as Wikipedia. For the given example, in such knowledgebases, there will be an entity for Saarland University, and a property of founded will be associated with this entity which will have a value of 1948. These knowledgebases once created can be queried and will return direct answers for precisely formulated questions.
 \subsection{Geographic Information Retrieval}
 The standard Information Retrieval systems consider all query terms uniformly. As noted by Vaid et al. in \cite{Vaid:2005:SIG:2156226.2156244}, if a geographic query is processed such that geographic reference in query usually a place name is treated equally like all search terms, there will be two problems i.e. some potential relevant documents might not be retrieved, and some potential irrelevant documents might be retrieved. 
 
@@ -167,21 +194,25 @@ The first problem occurs due to traditional keyword search limitation. An exampl
 The second problem occurs due to ambiguity. If the query term is ambiguous, and ambiguity is not resolved correctly, some irrelevant documents will be retrieved. An example for ambiguous geographic term can be "Hyderabad", it is a city in Pakistan and India. Another example for ambiguous geographic term can be "Jordan", it is a name of a country and a person. So we need to find out in query and documents that such ambiguous geographic locations refer to which city, town, state, country or even a person. Once we have resolved these ambiguities, our search results can take advantage of it and discard irrelevant documents for respective search query. Thus geographic information retrieval needs attention in its own right.  
 
 \subsection{Toponyms} Words in a document text corresponding to location names are called toponyms. So the names of various towns, cities, states, countries all over the world are toponyms. We can assign each of these toponyms its location in the form of a single lat/long value or a set of lat/long values which define the bounding polygon. Sometimes places such as airport names, road names are also considered as toponyms. An example of a text containing toponym can be "France won the world cup in 1998", here France is a toponym. 
-\subsection{Geotagging} Geotagging means understanding the geographic content of a text document. Geotagging is a two step process which involves detecting the toponyms in text and grounding them. These two steps are known as Geoparsing(also known as toponym recognition) and Geocoding(also known as toponym resolution). 
+\subsection{Geotagging} Geotagging means understanding the geographic content of a text document. Geotagging is a two step process which involves detecting the toponyms in text and grounding them \cite{Lieberman12adaptivecontext}. These two steps are known as Geoparsing(also known as toponym recognition) and Geocoding(also known as toponym resolution). 
 
-\begin{itemize}
+\begin{itemize}[leftmargin=*]
 	\subsubsection{Geoparsing} 
 	\item[] Geoparsing is concerned with detection of all ranges in the text that refer to place names or descriptions(e.g. north of) in the text \cite{Leidner:2011:DGR:2047296.2047298}. If only detection of place names is considered in the geoparsing, then geoparsing equivalent to toponym recognition; that is usually done by gazeteer based lookups, rule based approaches or machine learning based approaches. For the purposes of this writing Geoparsing and Toponym recognition are considered equivalent i.e.the task of finding all the toponyms(location names) in a document text.
 	\subsubsection{Geocoding} 
 	\item[] Geocoding is concerned with disambiguating toponyms that have more than one possible interpretations, and mapping each toponym to its correct geographic representation (lat/long value of the centroid of location, or a polygon) \cite{Leidner:2011:DGR:2047296.2047298}. Geocoding is also known as Toponym resolution (a term coined by Leidner in \cite{Leidner:2008:PhD}). Toponym resolution aims to resolve the ambiguity in toponyms as one location name can refer to multiple location names in the world, so the aim of toponym resolution is to assign the correct lat/long value to a toponym.
+	\subsubsection{Difficulty in Geotagging} Lieberman et. al in \cite{lieberman2010geotagging} succinctly put the reason geotagging is a difficult task. They state "Geotagging is difficult because the first step involves understanding natural language, while the second step requires a good understanding of the document’s content to make an informed decision as to which of the many possible locations is being referenced". The first step being Toponym recognition(Geoparsing) and second step being Toponym resolution(Geocoding).
 \end{itemize}
 
 \subsection{Spatial Indexing} Spatial Index is another index in addition to simple textual index. The aim of spatial index is to store the geographic information in such a way that allow fast and accurate retrieval of geographical queries. There are various methods of constructing a spatial index; one of the method is in which the structure of textual inverted index is modified such that the postings for each term now contains documents which are spatially grouped according to some criteria that contain the term as suggested in \cite{Vaid:2005:SIG:2156226.2156244}. It is further discussed to handle a query, the spatial footprint of the query is found, then for each query term only those documents in the corresponding posting are accessed which are grouped in the spatial footprint of the query. 
 
-Another important method of creating a spatial index is to create a spatial ontology from the corpus at hand. This ontology can be called a spatial knowledgebase. One such example of a spatial ontology is YAGO. Entities in such a knowledgebase will be names of towns, cities, states and countries. These entities can have properties and there can be relationship between two entites. For example there can be an entity "Germany", another "Munich", a relation between Munich and Germany in such knowledgbase can be "isCityIn" i.e. Munich is a city in Germany.
+There are also some specialized data structures like quad trees and kd trees which can be used to make a spatial index. They are not discussed in this report. 
+
+\subsection{Knowledgebases}
+Another important method of storing structured information is to create a knowledgebase using some ontology model from the corpus at hand. There are many available models such as RDF(Resource Description Framework)\footnote{\url{https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/}}, OWL 2\footnote{\url{https://www.w3.org/TR/owl2-overview/}} one can use to create such an ontology One such example of a knowledgebase is YAGO. Though YAGO is a general knowledgebase, one can create a spatially focussed knowledgebase only. Entities in such a knowledgebase will be names of towns, cities, states and countries. These entities can have properties and there can be relationship between two entites. For example there can be an entity "Germany", another "Munich", a relation between Munich and Germany in such knowledgbase can be "isCityIn" i.e. Munich is a city in Germany. Similarly there can be an entity for "Berlin", in addition to the relation of "isCityIn", Berlin can also have a relation "isCapitalCityOf" with Germany. From such a knowledgebase one can get a direct answer for a query like "Which city is capital of Germany?".
 
 \subsection{Gazeteers} 
-Gazeteers are long lists of geographic locations with respective features such as lat/long values and usually type of location(city, state, country etc). These gazeteers are used to look up for Some examples of online available gazeteers are GeoNames\footnote{\url{http://www.geonames.org/}}, World Factbook by CIA\footnote{\url{https://www.cia.gov/library/publications/the-world-factbook/geos/us.html}}, Getty Thesaurus of Geographic Names\footnote{\url{http://www.getty.edu/research/tools/vocabularies/tgn/index.html}}, etc.
+Gazeteers are long lists of geographic locations with respective features such as lat/long values and usually type of location(city, state, country etc). These gazeteers are used to look up toponyms properties such as lat/long values, population, parent state or country, alternative names, names in other languages and some other facts. Some examples of online available gazeteers are GeoNames\footnote{\url{http://www.geonames.org/}}, World Factbook by CIA\footnote{\url{https://www.cia.gov/library/publications/the-world-factbook/geos/us.html}}, Getty Thesaurus of Geographic Names\footnote{\url{http://www.getty.edu/research/tools/vocabularies/tgn/index.html}}, etc.
 
 \section{Motivation}\label{sec:sections}
 In this section it is discussed why is geotagging necessary and its need in different domains is also discussed.
@@ -198,33 +229,30 @@ Thus the geographic content in queries indeed account for a significant part of 
 Another interesting usecase of geographical visualization and browsing was studied by Kienreich et al. in \cite{Kienreich:2006:GAE:1153927.1154675}; they discussed geospatial approach to encyclopedia search and navigation. The articles from an encyclopedia were anchored(attached) to geographic locations of a map. a) Toponyms which had an individual article in encyclopedia, were directly attached to corresponding location in map for example Berlin. b) A geographic location do not had an individual article in encyclopedia, but were mentioned in an other encyclopedia article, for example an encyclopedia article about a famous personality mentions his birth place, and if this birthplace is not itself an article in encyclopedia, we can anchor this famous personality article to his birth place in the map. c) General encyclopedia articles for example an article on "deserts" should be anchored to say Sahara desert, Arabian desert and other deserts. The authors noted that challenge faced by them was in determining correct geospatial entities to anchor to, and it was due to ambiguity; the usual problem in toponym resolution. They suggested using additional information present in articles and information about entity itself for example other toponyms in article and hierachy information of entity respectively. All in all, geographical visualization and browsing techniques provide a new dimension to our textual data to explore it in.
 
 
-\subsection{Question Answering} in leidner thesis
-\cite{Leidner:2008:PhD}
+\subsection{Question Answering} 
+Another important domain where toponym geotagging is required is Question Answering. As mentioned by Leidner in 
+\cite{Leidner:2008:PhD}, there is a trend in search to answer some questions directly, instead of returning search results. For example a query asking distance between two cities; suppose "What is the distance between between Lahore and Multan?" is a query to a system. Here user is looking for a direct answer instead of some web links to documents which mention the query keyworkds; in other words the information need of the user is the numeric distance between the two cities. Thus the approach to solve such queries is suggested by Leidner \cite{Leidner:2008:PhD} in the following words: "To solve this problem, the extractive approach can be replaced for this question type by a knowledge-based approach, i.e. instead of trying to extract the answer, we (1) resolve both toponyms in the query and (2) compute the geographic distance using a geometric formula".
 
-\subsection{Geographic focus} web a where \cite{Amitay:2004:WGW:1008992.1009040}
+\subsection{Geographically Focussed Search} 
+One can develop a specialized search engine with focus on geographic aspects. One such system developed is STEWARD \cite{Lieberman:2007:SAS:1341012.1341045}. It takes two separate inputs from the user, one is the usual keywords the user is looking for. In addition to keywords the system takes location input too. So for example a user can enter a search keyword as "Cinema", and for location he can enter a city name, etc. The system tries to find documents that are relevant to both keyworkd and the location. STEWARD works differently than a normal search engine, as it is more than searching for keywords and location names in the text. It geotags all the toponyms in unstructured text documents and assign a geographic focus to each document, then the documents are retrieved by the order of spatial and textual relevancy. 
 
-\subsection{Spread Sheets} you are where you edit ...
-\subsection{Hidden Web} STEWARD \cite{Lieberman:2007:SAS:1341012.1341045}
-\subsection{News Articles} 
+\subsection{Browsing News Geographically} Existing news readers currently present such as Yahoo news, Google news have a very basic understanding of location and usually take news location as the address from where the news was published. Teitler et al. in \cite{Teitler:2008:NNV:1463434.1463458} present NewsStand\footnote{\url{http://newsstand.umiacs.umd.edu/web/}}; which aims to change the news reading experience, such that users choose a region of interest and read news and articles relevant to it \cite{samet2014reading}. The NewsStand system crawls around 50,000 news article every day, cluster them on content and location, rank the clusters by importance(number of articles in cluster, number of unique newspapers in cluster), associate each cluster to its geographic focus, display the news cluster on the map at its geographic focus point. More stories appear as the map as the map is zoomed in or out; thus providing a new experience to browse news geographically. Further details on the working of NewsStand can be found in \cite{Teitler:2008:NNV:1463434.1463458} and \cite{samet2014reading}.
 
-disambiguation toponyms in news \cite{Garbin:2005:DTN:1220575.1220621}
-
-geotagging using proximity sibling and prominence cues to understand comma groups \cite{Lieberman:2010:GUP:1722080.1722088}
-\subsection{Browsing News Geographically} 
-NewsStand \cite{Teitler:2008:NNV:1463434.1463458}
+Geotagging is an important component in the architecture of NewsStand; as it helps to find and resolve the toponyms in news articles. Geotagging will be an important component of any such system which aim to present news geographically on a map for a new experience. 
+% Geotagging is an important component in the architecture of NewsStand system as it finds toponyms in the news articles and assigns lat/long values to them. For recogniton of toponyms entity tables of well known locations such as countries, a POS tagger and a NER package was used. For resolution of toponyms dateline toponyms, object/container 
 
 
-\section{Adaptive Context Features}\label{sec:acf}
-In this section the paper "Adaptive Context Features for Toponym Resolution in Streaming News" \cite{Lieberman12adaptivecontext} by Lieberman and Samet is discussed. 
+\section{Lieberman and Samet's Adaptive Context Features}\label{sec:acf}
+In this section the paper "Adaptive Context Features for Toponym Resolution in Streaming News" \cite{Lieberman12adaptivecontext} by Lieberman and Samet is discussed. They establish the importance of toponyms in the news domain, as news are more likely than other domains to refer to locations. 
 
-Lieberman and Samet in \cite{Lieberman12adaptivecontext} state that toponym resolution can be considered as a classification problem; such that each of the possible interpretation for a toponym can be considered correct or incorrect. So methods from supervised machine learning can be applied to improve the accuracy of toponym resolution. New features termed as "Adaptive Context Features" are introduced help in correct resolution of toponyms. These features consider the other toponyms that occur in a window around the toponym being resolved; so they are contextual. These window width can be changed, so can the depth(possible interpretations to consider for toponyms inside the window) be changed; so they are adaptive i.e. parameters window width and depth can be changed; to tune for resolution speed or accuracy.
+Lieberman and Samet \cite{Lieberman12adaptivecontext} describe a new set of features, termed as Adaptive Context Features, that take the context around a toponym to resolve it effectively. Some usual toponym features such as population are also used in addition to adaptive features, like other authors such as in \cite{Amitay:2004:WGW:1008992.1009040}. The authors cast the toponym resolution as a classification problem; that each of the possible interpretation for a toponym can be considered correct or incorrect. So methods from supervised machine learning can be applied to improve the accuracy of toponym resolution. These techniques will perform better if the input features are designed better. New features termed as "Adaptive Context Features", are such that they consider the other toponyms that occur in a window(context) around the toponym being resolved; so these features are contextual. The parameters of the window such as breadth and depth can be changed. Breadth can be changed to increase the window size around a toponym from which the toponyms are to be considered to help in resolving the toponym. Similarly the depth(possible interpretations to consider for toponyms inside the window) can be changed; so these features are adaptive. The parameters breadth and depth can be tuned for resolution speed or accuracy.
 
-\subsection{Toponym Recognition}\label{subsec:titlepage}
-\begin{itemize}
-	\item Rule based
-	\item SNLP tools based
-\end{itemize}
-\subsection{Geotagging as Classification Problem}
+\subsection{Toponym Recognition procedure}\label{subsec:titlepage}
+The authors use both rule based and statistics based tools for toponym recognition. First step is tokenization, then lookups to tables of entity names are done; here location names and abbreviations are stored(e.g. "Maryland", "Md.") \cite{Lieberman12adaptivecontext}. They further process by refactoring the geographic names to bring them in a consistent format. Then they use statistical NLP tools like NER to recognizee toponyms. They further do POS tagging to find proper nouns, also get grammatical tags to get an idea about type of entities. The aim of recognition step is to recognize as many toponyms, thus increasing recall at the expense of precision. The next step of toponym resolution will aim to increase precision.
+\subsection{Toponym Resolution procedure}
+The recognition process is followed by toponym resolution procedure. As mentioned before, this is cast as a classification problem. For the classifier, authors use a random forest, a group of many decision trees. From the annotated data, many decision trees, based on random subset of the data and random subset of the features from feature vectors, are constructed. To identify a toponym/interpretation pair $(t,l_t)$ as correct or incorrect, each decision tree in forest labels the pair $(t,l_t)$ as correct or incorrect. The final decision whether the pair $(t,l_t)$ is correct or not is made by averaging decision of all the trees in forest. This score can  be considered as the confidence that the decision made for a specific toponym/interpretation pair is correct or not. Assigning confidence scores to the decision of extractions, is a viable option to surmount extraction errors in an information extraction system \cite{Sarawagi:2008:IE:1498844.1498845}. SVM based classifiers will face the problem of extraction errors as they can not assign meaningful confidence scores \cite{Lieberman12adaptivecontext}. Lieberman and Samet also note that the confidence scores can be used to tune the system for recall or precision; accepting results with lower confidence scores will lead to higher recall but lower precision, and accepting results with high confidence will lead to higher precision but lower recall.
+For a toponym t, and its interpretation $l_t$, a feature vector is made. 
+
 Lieberman and Samet in \cite{Lieberman12adaptivecontext} cast the geotagging problem as a classification problem. Both steps of geotagging i.e. toponym recogniton and resolution can be considered as a classification problems.
 \begin{itemize}
 	\item \textbf{toponym recognition }: here each word of the input text needs to be classified as toponym or not. For example consider the following sentence
@@ -232,8 +260,8 @@ Lieberman and Samet in \cite{Lieberman12adaptivecontext} cast the geotagging pro
 \end{itemize}
 \subsubsection{Annotated Dataset}
 As both toponym recognition and resolution are considered as classification problems, so some annotated data will also be required to train a supervised ML model on  it. Examples of such dataset can be
-.  \begin{itemize}
-	\item \textbf{toponym recognition }: \\
+.  \begin{itemize}[leftmargin=*]
+	\item[] \textbf{toponym recognition }: \\
 	{
 	\fontfamily{lmtt}\selectfont
 	\begin{tabular}{ c c c c c c c}
@@ -249,7 +277,7 @@ As both toponym recognition and resolution are considered as classification prob
 	\end{tabular}
 	}
 	%"Birmingham, a major city of West Midlands is second most populous city of England, first is ofcourse London."
-	\item \textbf{toponym resolution}: for the same sentence i.e. "Birmingham, a major city of West Midlands is second most populous city of England, third most populous is Leeds.", the annotated dataset for toponym resolution will have correct interpretations of each toponym specified out of a number of interpretations, it might look something like \\
+	\item[] \textbf{toponym resolution}: for the same sentence i.e. "Birmingham, a major city of West Midlands is second most populous city of England, third most populous is Leeds.", the annotated dataset for toponym resolution will have correct interpretations of each toponym specified out of a number of interpretations, it might look like \\
 	
 	{
 		\fontfamily{lmtt}\selectfont
@@ -265,67 +293,159 @@ As both toponym recognition and resolution are considered as classification prob
 		\end{tabular}
 	}
 	{}\\
-	The above table is for illustration purpose. It will be stored actually in some kind of feature vector form; for each of toponym/interpretation pair there can be a feature vector that can have various features (to be discussed in subsequent sections), and interpretations can be lat/long values, container cities, states or countries. 
+	The above table an illustration of how an annotated sentence can look like in the annotated data. 1 means the correct interpretation of the respective toponym and 0 means wrong interpretation. Ofcourse one needs to only mark the correct interpretations for each toponym, as then other interpretations will be considered wrong for that toponym. 
 \end{itemize}
 
 \subsubsection{Design of Input Features}
-As the geotagging problem is modeled as a classification problem, so the design of input features play an important part in effectiveness of these supervised machine learning techniques \cite{Lieberman12adaptivecontext}. The paper suggests two types of features i.e. context free features and adaptive context features. These features make up the feature vectors for each 
+As the geotagging problem is modeled as a classification problem, so the design of input features play an important part in effectiveness of these supervised machine learning techniques \cite{Lieberman12adaptivecontext}. The paper suggests two types of features i.e. context free features and adaptive context features. These features make up the feature vectors for each toponym/interpretation pair in the dataset.
 
 \subsection{Context Free Features}
-\begin{itemize}
+The context free features (computed for each toponym/interpretation pair) are such features that do not depend on the context of the toponym being resolved. These features, unlike context sensitive features, do not depend on the context of the toponym t being resolved. In other words the context free features do not depend on the other toponyms in the window around toponym t, instead they can be obtained from the gazeteer or computed in some other way. These context free features are termed as Resolution Features by the authors. They consider following resolution features:
+\begin{itemize}[leftmargin=*]
+	\item[] \textbf{Interps:} This is the number of interpretations for the toponym t being resolved. This feature can be obtained from the gazeteer directly. For example suppose a toponym t = "Leeds" has 9 number of toponym/interpretation pairs $(t, l_t)$. Thus the interpretations for the toponym t would be 9.
+	\item[] \textbf{Population:} This is the population of an interpretation $l_t$ of the toponym t. A large population for interpretation $l_t$ means $l_t$ is more well-known. For example Perth is a city in Australia and Scotland. The Australian Perth has more population and it is indeed more well-known. 
+	\item[] \textbf{Altnames:} This is the number of alternate names of an interpretation $l_t$ of the toponym t. Similar to population feature, a large number of alternate names for interpretation $l_t$ means $l_t$ is more well-known.  
+	\item[] \textbf{Dateline:} This is the Geographic distance of an interpretation $l_t$ from the a dateline toponym(the toponym in the line at the head of news article). This is usually the place of writing of the news article. 
+	\item[] \textbf{Locallex:} This is the Geographic distance of an interpretation $l_t$ from the newspaper's local lexicon(expressed as lat/long point). As established in \cite{lieberman2010geotagging}, the local lexicon is a group of toponyms which the readers of a local newspaper are most likely aware about. These can be determined from all the news articles of the local newspaper as described in \cite{lieberman2010geotagging}.  %For example for a local news paper in of Saarland, the readers are aware of the local cities of Saarland. This is the local leixcon of the readers of the local newspaper. As toponyms can have ambiguity so for local news, local lexicon is a nice feature; and it can be determined by collecting all the news articles from the local newspaper. Finding the most refered to toponyms, assignning them weights, and then start putting these 
 	
-	\item Random forests used for classification
-	\item Precision and Recall balance
-	\item Alternate method of SVM and its drawbacks
-\end{itemize}
-\begin{itemize}
-	\item I
-	\item P
-	\item A
-	\item D
-	\item L
+	
+	The first three  features can be get from the the gazeteer used by the authors i.e. Geonames. The last two features i.e. Dateline and Locallex are specifcally news dependent unlike the first three. 
 \end{itemize}
 
-\begin{itemize}
-	\item Proximity and Sibling features subsume context sensitive features
-	\item position of toponym in window irrelevant
-\end{itemize}
+\subsection{Adaptive Context Features} 
+As mentioned earlier, adaptive context features depend on the context or window around the toponym t being resolved; other toponyms in the window around toponym t help in resolving it. The interpretations of toponyms in the window are compared with the interpretations of the toponym t to aid in finding the correct interpretation of a toponym t. The breadth of window can be changed to consider more or less toponyms around the toponym t. Similarly the depth of window can be changed to consider more or less interpretations of toponyms in it. 
 
-\subsection{Context Sensitive Features}
+An example of context sensitive feature is object/container pair, which is mostly used by authors when the audience is not familiar with the location; for example in case the author is talking about Perth of Scotland, he will write it as Perth, Scotland or Perth in Scotland. As the readers will most probably mistake it with Perth, Australia. 
+
+The two new context sensitive features, termed as "Adaptive Context Features", suggested by the Lieberman and Samet in \cite{Lieberman12adaptivecontext} are 
+\begin{itemize}
+	\item Proximity features
+	\item Sibling features
+\end{itemize} 
+These new adaptive context features generalize other context sensitive features such as object/container pair, as object/container pair can be considered special case of sibling feature in which the window breadth is one; so that only adjacent toponym to toponym t is considered to help in resolving the toponym t. These adaptive context features do not consider the order in which toponyms appear in the window, neither is the grammatical structure or tokens present between toponyms in the window is considered.   
 \subsubsection{Proximity Features}
-\begin{itemize}
-	\item CONTINUOUS
-	\item computation of proximity feature score
-\end{itemize}
-\subsubsection{Sibling Features}
-\begin{itemize}
-	\item DISCRETE
-	\item computation of sibling feature score
-	\item advantages
-\end{itemize}
+Proximity features represent the average distance of an interpretation $l_t$ of toponym $t$, to the geographically closest interpretations, say $l_o$ of all the other toponyms $o$ in the window. Proximity feature, like all other features, is computed for each toponym/interpretation $(t, l_t)$ pair. The average distance will be a continuos value, thus proximity features are a continuous feature. The smaller the proximity feature value, the geographic terms within the window are more proximate.
+
+The rational behind this feature is that the any news article is about a specific region, so it should have many proximate toponyms; thus for computing the proximity feature for toponym/interpretation $(t, l_t)$pair, all the toponyms $o$ in the window around $t$ are assigned such interpretations, say $l_o$, that are geographically closest to the interpretation $l_t$ of $t$. This computation ensures that all toponyms in window play a role in determining the correct interpretation $l_t$ of $t$. For example consider that the window contains "..., Birmingham and Perth. It was relatively warm in London ... "; here consider that our toponym t to resolve is Perth, we find two interpretations for it one is Perth in Scotland other in Australia. So our two pairs of $(t, l_t)$ will be (Perth, lat/long of Scotland's Perth) and (Perth, lat/long of Australia's Perth).
+
+Assuming that window depth is 2, so the possible interpretations for toponyms in example are shown below.
+$$
+\begin{tabular}{ c| c | c | c}
+	
+	{} & Birmingham & \textbf{Perth} & London \\
+	\hline
+	1 & UK & Scotland & UK \\
+	2 & Michigan, USA & Australia & Ontario, Canada \\
+\end{tabular}
+$$
+For the pair $(Perth, Scotland)$, the interpretations of Birmingham and London  will be of UK as their distance is less than the other interpretations. 
+
+\begin{tabular}{c l l}
+	\checkmark & $(Perth, Scotland) \xrightarrow{distance} (Birmingham, UK)$ & $338.8 miles$\\
+	{} & $(Perth, Scotland) \xrightarrow{distance} (Birmingham, Michigan)$ & $3496.2 miles$ \\
+	\checkmark & $(Perth, Scotland) \xrightarrow{distance} (London, UK)$ & $450.6 miles$ \\
+	{} & $(Perth, Scotland) \xrightarrow{distance} (London, Ontario)$ & $3403.7 miles$ \\
+\end{tabular}
+
+The interpretations of toponyms in the window i.e. Birmingham and London that are proximate to the interpretation Perth of Scotland are check marked above; the average distance for them is $394.7 miles$, so for the $(t, l_t)$ pair of (Perth, Scotland), the feature proximity will have a value of 394.7; similarly proximity value for the $(t,l_t)$ pair turns out to be greater than 9000. Thus if only proximity feature is used, we are more likely to pick the Perth of Scotland as correct interpretation, which is indeed correct.  
+
+\subsubsection{Sibling Features}\label{sec:sibling-features}
+Sibling features capture the toponyms that belong to same country, state or any other administrative division. For example Saarbruecken and Voelklingen both are cities of the state of Saarland. They both are siblings at city level. The authors consider three levels of resolution for sibling features; country level, state level, and county level. For every $(t, l_t)$ pair, the number of toponyms o in window around toponym t, that are sibling of $l_t$ is set as the value for sibling feature; so it is a discrete feature. The higher the sibling feature score for a $(t, l_t)$ pair, the more likely it is that $l_t$ is the correct interpretation for $t$. Sibling features prove specially helpful when two cities within a state or country are at opposite ends, as geograpically they are not close to each other, but they will have same parent state, country or both. Sibling features are computed in a similar way as proxmity features. For example consider that the window contains "... Bloomington, Rochester and Duluth. ..."; also consider that toponym t being resolved is Rochester. 
+
+Assuming that window depth is 3, so the possible interpretations for toponyms in example are shown below (assume that only two interpretations for Bloomington and Duluth are retrieved from our Gazeteer).
+$$
+\begin{tabular}{ c| c | c | c}
+
+{} & Bloomington & \textbf{Rochester} & Duluth \\
+\hline
+1 & Minnesota, USA & Victoria, Australia & Georgia, USA\\
+2 & Michigan, USA & New York, USA & Minnesota, USA\\
+2 & {} & Minnesota, USA & {}\\
+\end{tabular}
+$$
+
+In the above example there are three toponym/interpretation $(t, l_t)$ pairs for which the sibling feature score needs to be computed. They are (Rochester, Victoria Australia), (Rochester, New York USA) and (Rochester, Minnesota USA). The sibling score for (Rochester, Victoria Australia) would be 0, as Bloomington and Duluth have no such interpretation that can be sibling of Rochester of Victoria, Australia. The sibling score for (Rochester, New York USA) would be 4, as Bloomington has two interpretations that are also in USA, and so does Duluth. Finally the sibling score for (Rochester, Minnesota) would be 6, as first interpretation of Bloomington is a sibling at state and country level, and second interpretation of Bloomington is a sibling at onlt country level, so the two interpretations of Bloomington contribute a score of 3 for (Rochester, Minnesota USA), similarly a score of 3 is contributed by the two interpretations of Duluth. The sibling feature scores for three toponym interpretation $(t, l_t)$ pairs for the toponym t Rochester are summarized in the table below:
+
+$$
+\begin{tabular}{ c| c | c | c}
+
+{} & $(t, l_t)$ & Score & common sibling levels. \\
+\hline
+1 & (Rochester, Victoria Australia) & 0 & -\\
+2 & (Rochester, New York USA) & 4 & 4 x USA\\
+2 & (Rochester, Minnesota USA) & 6 & 4 x USA, 2 x Minnesota\\
+\end{tabular}
+$$
+
+
 \subsection{Feature Computation}
-\begin{itemize}
-	\item window breadth and window depth
-	\item The order of interpretations in window depth is very important
-	\item computation of proximity feature score
-\end{itemize}
+As mentioned earlier, a window around toponym t is considered while computing the adaptive context features for its $(t, l_t)$ pairs; and the breadth and depth of window can be tuned. The breadth controls the breadth of the window around toponym t to consider, more breadth means that more toponyms around t will be used in computing the adaptive features and resolving t. Similarly the depth controls how many toponyms interpretations to consider for each toponym in the window. Larger values for window breadth and depth will slow down the speed of resolution, but will provide more evidence to achieve better resolution result. 
 
+A drawback of depth mentioned by authors is that most of the toponyms in the gazeteer have few (one or two) interpretations, so it may not seem very effective. Another important issue mentioned by the authors is the order in which toponym interpretations should be considered; this is important because there is a chance that the correct interpretation of the toponym to resolve might not be considered altogether due to the fact that it was not in first $|depth|$ interpretations considered. For example consider the same example from previous section \ref{sec:sibling-features} i.e. "... Bloomington, Rochester and Duluth. ...". The toponym t to resolve is again Rochester. Now suppose the depth is 2, instead of 3. The interpretations to consider now can be shown in table below
+$$
+\begin{tabular}{ c| c | c | c}
+
+{} & Bloomington & \textbf{Rochester} & Duluth \\
+\hline
+1 & Minnesota, USA & Victoria, Australia & Georgia, USA\\
+2 & Michigan, USA & New York, USA & Minnesota, USA\\
+\end{tabular}
+$$
+The table above shows that the correct interpretation of Rochester, that was Rochester of Minnesota was not considered at all due to the fact the depth was 2, and the order in which the interpretations were considered was not defined. The authors address this problem by sorting the interpretations to consider using the context free features of Altnames, Population and Locallex.
+
+Some pre-filtering is also done in the window, to remove the toponyms that give no additional information. For example if in a window a toponym t is mentioned twice or more, this second t is not considered in the window, as it will have same interpretations and will only reduce the time of resolution. Authors furhter explain that the toponym repetition in document is not useless altogether, they propagate the strong adaptive feature scores of a toponym t to other occurences of t in the document where the adaptive feature scores of the same toponym t were weaker. Authors term this step as Feature Propagation, it is the final processing step done after toponym resolution. 
+
+Algorithm 1 describes the method for computing adaptive context features by Lieberman and Samet	in \cite{Lieberman12adaptivecontext}:
+
+\begin{algorithm}
+	\caption{Lieberman and Samet  \cite{Lieberman12adaptivecontext} - Computing adaptive context features i.e. proximity and sibling features}\label{euclid}
+	\begin{algorithmic}[1]
+		\Procedure{AdaptiveContext}{}
+		\BState Let $w_b$ be window breadth and $w_d$ be window depth
+		\BState \textbf{for} all toponyms t in document:
+		\State $P \gets \{\}$
+		\State \textbf{for} all toponyms o in window around t:
+		\State \indent $L_o \gets$  all interpretations of o upto $w_d$
+		\State \indent \textbf{for} all interpretations $l_t$ of $t$ upto $w_d$:
+		\State \indent \indent $l_o \gets$ get interp. from $L_o$ geographically closest to $l_t$
+		\State \indent \indent $dist \gets $ geographicDistance($l_o, l_t)$
+		\State \indent \indent $P[l_t].add(dist)$
+		\State \indent \textbf{end for}
+		\State \indent \textbf{for} each lev $\in$ sibling level :
+		\State \indent \indent \textbf{if} $\exists$ $l_o$ $\in$ $L_o$ which is sibling at level lev$:$
+		\State \indent \indent \indent SibFeature($t, l_t, lev$)$++$
+		\State \indent \indent \textbf{end if}
+		\State \indent \textbf{end for}
+		\State \textbf{end for}
+		\State \textbf{for} all interpretations $l_t$ of $t$ upto $w_d:$
+		\State \indent ProxFeature($t, l_t$) $\gets$ average($P[l_t]$)
+		\State \textbf{end for}
+		\BState \textbf{end for}
+		
+		
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+In Algorithm 1, P is a dictionary with key $l_t$, to hold respective lists having distances for each toponym $o$ interpretation that is geographically closest to $l_t$.
 \subsection{Experiments}
-\subsection{Competing methods}
-\begin{itemize}
-	\item Thomson Reuter's OpenCalais
-	\item Yahoo!'s Placemaker
-\end{itemize}
-\subsection{Gazeteer used}
-\subsection{Datasets used}
-\subsection{Experiments results}
-explain the evaluation metrics used for recognition here
-\subsubsection{Recognition accuracy}
-\subsubsection{Resolution accuracy}
-\subsubsection{Effect of adaptive parameters}
-\section{Conclusion}\label{sec:conclusion}
+For evaluation purposes, Lieberman and Samet in \cite{Lieberman12adaptivecontext}, chose news data from ACE, LGL and CLUST datasets. The gazeteer used to look up toponyms is Geonames \footnote{\url{http://www.geonames.org/}}. The systems performance of toponym resolution is compared with two commercial geotagging frameworks i.e. Thomson Reuter's OpenCalais and Yahoo!'s Placemaker. The method suggested by the authors perform better in majority of test scenarios and datasets. Further details can be found in the original paper \cite{Lieberman12adaptivecontext}. 
+\subsection{Evaluation Measures} As established earlier, geotagging is a two step process; consisting of toponym recognition and toponym resolution. Thus it makes sense to test the system performance for both the steps; the authors compare recognition performance, resolution performance and combined performance of both recogniton and resolution. The authors use the following three evaluation measures:
 
-\section{Summary}
+\begin{itemize}[leftmargin=*]
+	\item[] \textbf{Precision:} For toponym recognition, precision would be the fraction of correctly recognized toponyms out of all recognized toponyms. And for toponym resolution, precision would be the fraction of correctly resolved toponyms out of all resolved toponyms.  From the characteristic of precision, it is evident one can achieve higher precision for toponym recognition process by recognizing a few toponyms only. Similarly higher precision for toponym resolution can be achieved.  
+	\item[] \textbf{Recall:} For toponym recognition, recall would be the fraction of correctly recognized toponyms out of all true toponyms. And for toponym resolution, recall would be the fraction of correctly resolved toponyms out of all true toponyms. A system having higher recall would try to recognize many toponyms, and then resolve them. 
+	\item[] \textbf{F1 score:} F1 combines both precison and recall and is given by the formula $\frac{2.P.R}{P+R}$. This measure can be seen as a harmonic mean of precision and recall. F1 measure can be seen as a balancing measure which balances out the skew in our system results by using only precision or recall.
+\end{itemize}
+The precision for recognition process, reported by Lieberman and Samet in \cite{Lieberman12adaptivecontext}, was lower than the competing systems. This was mitigated by the fact that their system had significantly higher recall values. And F1 score was better or close to other systems. The precision, recall and F1 scores for resolution process were better overall than other systems.
+
+
+\section{Conclusion}\label{sec:conclusion}
+Geotagging is an important process which allows to find toponyms(location names) in text, and ground(resolve) them to their correct interpretations. Ambiguity is the big problem that needs to be overcome in order to geotag a document effectively. In above sections an introduction to the matter of geotagging was give, then in subsequent sections background concepts were discussed, various domains were discussed which serve as a motivation for doing better geotagging, then the paper by Lieberman and Samet in \cite{Lieberman12adaptivecontext}; "Adaptive Context Features for Toponym Resolution in Streaming News" was discussed in detail. Lieberman and Samet in \cite{Lieberman12adaptivecontext} put forward new features that can be used for toponym resolution. These features depend on other topnyms in the window around the toponym being resolved, allow the window breadth and depth to be changed; hence the name adaptive context features. These features along with some other ususal features such as population, number of interpretations, etc make up the feature vectors for each toponym/interpretation pair $(t, l_t)$.
+
+The system suggested by Lieberman and Samet performs good, and the features used are interesting, not only the adaptive features buth the non-contextual features are also interesting. The system gives confidence scores to each of the resolution it makes, it is a good point as in information extraction systems it is desirable to assign confidence scores (which correlate to probability that the decision is correct) to extractions because extraction errors are bound to happen \cite{Sarawagi:2008:IE:1498844.1498845}. One issue that is evident in many information extractiton systems is that of difficulty of detecting missed extractions \cite{Sarawagi:2008:IE:1498844.1498845}; this issue can also occur in the approach suggested by Lieberman and Samet \cite{Lieberman12adaptivecontext}. Unfortunately it is difficult to have a large labeled data to find out what was missed in recognition phase. Another issue is again related to training data; as it employs supervised machine learning, so the method will require labeled dataset to perform at an  optimal level. And labeling the data is a difficult and laborious task.
+
+An interesting research direction can be to combine the spatial information with temporal(time) information, and try to make spatiotemporal visualization techniques for famous events in world like wars, climate change, etc. Ofcourse this task will need geotagging, and in addition to it will also need temporal tagging.
+
 
 % References (bibliography):
 % a) add ``Bibliography'' to table of content
